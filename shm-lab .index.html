@@ -1,0 +1,205 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>مختبر الحركة التوافقية البسيطة</title>
+<style>
+:root{--bg:#eaf0f9;--card:#fff;--ink:#14213d;--mut:#5b6b85;--grid:#d6e0ef;--bd:#d0dbec;--ac:#2563eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1324;--card:#121d36;--ink:#e6edf9;--mut:#93a4c3;--grid:#24365a;--bd:#22345a;--ac:#4f8cff;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1324;--card:#121d36;--ink:#e6edf9;--mut:#93a4c3;--grid:#24365a;--bd:#22345a;--ac:#4f8cff;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 "Segoe UI",Tahoma,"Noto Naskh Arabic",system-ui,sans-serif}
+header{padding:22px 14px;text-align:center;color:#fff;background:linear-gradient(135deg,#1e3a8a,#0e7490)}
+h1{margin:0;font-size:clamp(20px,4.2vw,30px)}header p{margin:4px 0 0;opacity:.88;font-size:14px}
+main{max-width:1250px;margin:auto;padding:14px;display:grid;gap:14px}
+.row{display:grid;gap:14px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}
+@media(max-width:900px){.row{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:0 4px 18px #0000001a}
+h2{margin:0 0 10px;font-size:17px}h3{margin:0 0 4px;font-size:15px}
+canvas{width:100%;display:block;border-radius:10px;background:linear-gradient(var(--card),var(--bg));touch-action:pan-y}
+#sim{height:300px}.gr{height:200px;cursor:crosshair}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center}
+button{font:inherit;cursor:pointer;border:1px solid var(--bd);background:var(--bg);color:var(--ink);border-radius:9px;padding:5px 11px}
+button:hover{border-color:var(--ac)}button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+.ctl{display:grid;grid-template-columns:minmax(90px,auto) 1fr 76px 44px;gap:8px;align-items:center;margin:9px 0;font-size:14px}
+.ctl input[type=range]{width:100%;accent-color:var(--ac)}
+.ctl input[type=number]{width:76px;padding:3px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--ink);direction:ltr;text-align:center}
+.ctl span{direction:ltr;color:var(--mut);font-size:12px}
+.eq{direction:ltr;font:14px "Cambria Math",Georgia,serif;padding:5px 9px;border-radius:8px;background:var(--bg);margin:5px 0;text-align:left;overflow-x:auto;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:8px}
+.cell{border:1px solid var(--bd);border-radius:10px;padding:5px 9px;background:var(--bg)}
+.cell small{color:var(--mut);display:block}.cell b{display:block;direction:ltr;text-align:right;font-size:15px}
+.leg{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--mut);margin-bottom:6px}
+.leg i{display:inline-block;width:22px;height:4px;border-radius:2px;margin-inline-end:5px;vertical-align:middle}
+.note{font-size:13px;color:var(--mut);margin-top:6px}
+.bar{display:grid;grid-template-columns:22px 1fr 100px;gap:8px;align-items:center;margin:7px 0}
+.tk{height:14px;background:var(--bg);border-radius:8px;overflow:hidden}.tk i{display:block;height:100%;transition:width .05s}.bar span{direction:ltr;font-size:13px}
+.ex{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.ex .card{box-shadow:none}.out{margin:8px 0 0;padding:6px 9px;background:var(--bg);border-radius:8px;font-size:13px}
+.sch{font-size:clamp(14px,2.8vw,18px);font-weight:700;margin-bottom:4px;letter-spacing:.3px}footer{margin-top:6px;padding:22px 14px calc(22px + env(safe-area-inset-bottom,0px));text-align:center;color:#fff;background:linear-gradient(135deg,#1e3a8a,#0e7490)}footer b{display:block;font-size:clamp(16px,3vw,20px)}footer span{display:block;margin-top:4px;opacity:.9;font-size:14px}</style></head><body>
+<header><div class="sch">مدرسة أحمد بن حنبل الثانوية للبنين</div><h1>🔬 مختبر الحركة التوافقية البسيطة (SHM)</h1><p>نابض أفقي أو بندول بسيط — غيّر المتغيرات وشاهد الأثر فورًا على الحركة والرسوم والطاقة</p></header>
+<main>
+<div class="row" id="top">
+ <div class="card"><h2 id="st">🧪 المحاكاة: كتلة ونابض</h2><div class="btns" style="margin:0 0 8px"><button class="p" id="mS" data-a="mS">🔩 كتلة ونابض</button><button id="mP" data-a="mP">🎯 بندول بسيط</button></div><canvas id="sim"></canvas><div class="note" id="warn"></div>
+  <div class="leg" style="margin-top:8px"><span><i style="background:#3b82f6"></i>متجه الإزاحة x</span><span><i style="background:#22c55e"></i>متجه السرعة v</span><span><i style="background:#ef4444"></i>متجه التسارع a</span><span>(طول v وa نسبي)</span></div>
+  <div class="btns">
+   <button class="p" data-a="play">▶ تشغيل</button><button data-a="pause">⏸ إيقاف مؤقت</button><button data-a="stop">⏹ إيقاف</button><button data-a="restart">↻ إعادة التشغيل</button><button data-a="reset">⟲ ضبط القيم</button>
+   <button data-a="slow">⏪ إبطاء</button><b id="spd" dir="ltr">×1</b><button data-a="fast">⏩ تسريع</button>
+   <button data-a="sb">◀ خطوة للخلف</button><button data-a="sf">خطوة للأمام ▶</button>
+  </div>
+  <h2 style="margin-top:14px">📐 المعادلات بالتعويض اللحظي</h2><div id="eq"></div>
+ </div>
+ <div style="display:grid;gap:14px;align-content:start">
+  <div class="card"><h2>🎛️ لوحة التحكم</h2><div id="c1"></div><div id="pc" style="display:none"><div class="note">في البندول: ω = √(g/L) تُحسب تلقائيًا من L وg.</div></div></div>
+  <div class="card"><h2>📊 لوحة النتائج اللحظية</h2><div class="grid" id="res"></div></div>
+ </div>
+</div>
+
+<div class="card"><h2>📈 الرسوم البيانية المتزامنة</h2>
+ <div class="btns" style="margin:0 0 8px"><button data-a="zi">🔍+ تكبير</button><button data-a="zo">🔍− تصغير</button><button data-a="zr">إعادة ضبط الرسوم</button><span class="note">اسحب على أي رسم لتحريك مؤشر الزمن، أو مرّر المؤشر لقراءة القيم اللحظية (عجلة الفأرة للتكبير).</span></div>
+ <div style="display:grid;gap:14px">
+  <div><div class="leg"><span><i style="background:#3b82f6"></i>x(t) = A sin(ωt+φ)</span><span>○ قمم وقيعان</span><span>⟷ الزمن الدوري T</span></div><canvas class="gr" id="g1"></canvas><div class="note" id="r1"></div></div>
+  <div><div class="leg"><span><i style="background:#22c55e"></i>v(t) = Aω cos(ωt+φ)</span></div><canvas class="gr" id="g2"></canvas><div class="note" id="r2"></div></div>
+  <div><div class="leg"><span><i style="background:#ef4444"></i>a(t) = −Aω² sin(ωt+φ)</span></div><canvas class="gr" id="g3"></canvas><div class="note" id="r3"></div></div>
+ </div>
+</div>
+
+<div class="row">
+ <div class="card"><h2>⚡ مختبر الطاقة</h2>
+  <div class="leg"><span><i style="background:#22c55e"></i>الطاقة الحركية K</span><span><i style="background:#3b82f6"></i>طاقة الوضع U</span><span><i style="background:#f59e0b"></i>الطاقة الكلية E</span></div>
+  <canvas class="gr" id="g4" style="height:240px"></canvas>
+  <div style="margin-top:10px">
+   <div class="bar"><b style="color:#22c55e">K</b><div class="tk"><i id="bK" style="background:#22c55e"></i></div><span id="vK"></span></div>
+   <div class="bar"><b style="color:#3b82f6">U</b><div class="tk"><i id="bU" style="background:#3b82f6"></i></div><span id="vU"></span></div>
+   <div class="bar"><b style="color:#f59e0b">E</b><div class="tk"><i id="bE" style="background:#f59e0b;width:100%"></i></div><span id="vE"></span></div>
+  </div>
+  <div class="note">عند x = 0: K أعظم وU = 0. عند x = ±A: U أعظم وK = 0. المجموع E ثابت (نموذج مثالي بلا احتكاك).</div>
+ </div>
+ <div style="display:grid;gap:14px;align-content:start">
+  <div class="card"><h2>🎛️ متغيرات الطاقة</h2><div id="c2"></div></div>
+  <div class="card"><h2>📐 معادلات الطاقة</h2><div id="eqE"></div></div>
+ </div>
+</div>
+
+<div class="card"><h2>🧭 اكتشف بنفسك <button data-a="top" style="font-size:13px;margin-inline-start:8px">↑ إلى المحاكاة</button></h2><div class="ex" id="ex"></div></div>
+</main>
+<footer><b>مدرسة أحمد بن حنبل الثانوية للبنين</b><span>عايش الديري</span></footer>
+<script>
+const $=i=>document.getElementById(i),PI=Math.PI,BL='#3b82f6',GR='#22c55e',RD='#ef4444',OR='#f59e0b',FN='"Segoe UI",Tahoma,sans-serif';
+const S={A:1,w:2,p:0,t:0,m:1,play:true,z:1,L:1,g:9.81,mode:'spring'},D={A:1,w:2,p:0,t:0,m:1},SP=[.1,.25,.5,1,2,4];let si=3,hov=null,drag=false,TH={};
+const CF={A:['السعة A','m',.1,2,.05],w:['التردد الزاوي ω','rad/s',.5,10,.1],p:['ثابت الطور φ','rad',-6.28,6.28,.01],t:['الزمن t','s',0,60,.01],m:['الكتلة m','kg',.1,5,.1],L:['طول الخيط L','m',.3,3,.05],g:['الجاذبية g','m/s²',1,20,.01]};
+const F={x:t=>S.A*Math.sin(S.w*t+S.p),v:t=>S.A*S.w*Math.cos(S.w*t+S.p),a:t=>-S.A*S.w*S.w*Math.sin(S.w*t+S.p)};
+F.K=t=>.5*S.m*F.v(t)**2;F.U=t=>.5*S.m*S.w*S.w*F.x(t)**2;F.E=()=>.5*S.m*S.w*S.w*S.A*S.A;
+const Tp=()=>2*PI/S.w,win=()=>3*Tp()/S.z,f2=v=>v.toFixed(2),clampT=t=>Math.min(60,Math.max(0,t));
+const fm=v=>{const a=Math.abs(v);return a==0?'0':a>=100?v.toFixed(0):a>=1?v.toFixed(1):v.toPrecision(2)};
+const fx=v=>Math.abs(v)<.01&&v!=0?v.toExponential(2):v.toFixed(3);
+function theme(){const s=getComputedStyle(document.documentElement);['bg','card','ink','mut','grid'].forEach(k=>TH[k]=s.getPropertyValue('--'+k).trim())}
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',theme);theme();
+
+/* ---------- controls ---------- */
+const reg={};
+function mk(host,keys){keys.forEach(k=>{const[l,u,mn,mx,st]=CF[k],r=document.createElement('div');r.className='ctl';
+ r.innerHTML=`<label>${l}</label><input type="range" min="${mn}" max="${mx}" step="${st}"><input type="number" min="${mn}" max="${mx}" step="${st}"><span>${u}</span>`;
+ const[a,b]=r.querySelectorAll('input');(reg[k]=reg[k]||[]).push(a,b);
+ a.oninput=b.onchange=e=>setV(k,+e.target.value);host.append(r);});keys.forEach(sync)}
+function setV(k,v){const[,,mn,mx]=CF[k];S[k]=Math.min(mx,Math.max(mn,isNaN(v)?S[k]:v));sync(k)}
+function sync(k){reg[k].forEach(i=>{if(i!==document.activeElement)i.value=i.type=='number'?+S[k].toFixed(3):S[k]})}
+mk($('c1'),['A','w','p','t']);mk($('pc'),['L','g']);mk($('c2'),['m','A','w','t']);setMode('spring');
+
+/* ---------- canvas helpers ---------- */
+function fit(cv){const d=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;if(cv.width!=Math.round(w*d)||cv.height!=Math.round(h*d)){cv.width=Math.round(w*d);cv.height=Math.round(h*d)}const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);c.clearRect(0,0,w,h);return[c,w,h]}
+function tx(c,s,x,y,al='center',col=TH.ink,sz=13){c.fillStyle=col;c.font=sz+'px '+FN;c.textAlign=al;c.direction=/[\u0600-\u06FF]/.test(s)?'rtl':'ltr';c.fillText(s,x,y)}
+function ar(c,x1,x2,y,col,l){c.strokeStyle=c.fillStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(x1,y);c.lineTo(x2,y);c.stroke();const d=Math.abs(x2-x1)>2?Math.sign(x2-x1):0;c.beginPath();if(d){c.moveTo(x2,y);c.lineTo(x2-d*10,y-5);c.lineTo(x2-d*10,y+5)}else c.arc(x1,y,3,0,7);c.fill();tx(c,l,(x1+x2)/2,y-8,'center',col,12)}
+
+/* ---------- spring-mass animation ---------- */
+function sim(){if(S.mode=='pend')return simP();const[c,w,h]=fit($('sim')),cx=w/2,sc=(w/2-90)/2,fy=190,hw=22+6*S.m,bh=hw*1.5,t=S.t,
+ x=F.x(t),v=F.v(t),a=F.a(t),xm=cx+x*sc,vm=S.A*S.w,am=vm*S.w,sy=fy-bh/2;
+ c.fillStyle=TH.grid;c.fillRect(0,fy,w,4);c.fillStyle=TH.mut;c.fillRect(8,fy-115,12,119);
+ c.setLineDash([5,4]);c.lineWidth=1.2;
+ [[cx,TH.mut,''],[cx+S.A*sc,BL,'+A'],[cx-S.A*sc,BL,'−A']].forEach(([X,col,l])=>{c.strokeStyle=col;c.beginPath();c.moveTo(X,38);c.lineTo(X,fy+50);c.stroke();if(l)tx(c,l,X,32,'center',col)});c.setLineDash([]);
+ tx(c,'x = 0 : موضع الاتزان',cx,fy+66,'center',TH.mut,12);
+ const x0=20,x1=xm-hw,n=14;c.beginPath();c.moveTo(x0,sy);for(let i=0;i<n;i++)c.lineTo(x0+(x1-x0)*(i+.5)/n,sy+(i%2?-14:14));c.lineTo(x1,sy);c.strokeStyle='#94a3b8';c.lineWidth=2.5;c.stroke();
+ const g=c.createLinearGradient(xm-hw,0,xm+hw,0);g.addColorStop(0,'#60a5fa');g.addColorStop(1,'#1d4ed8');c.fillStyle=g;c.fillRect(xm-hw,fy-bh,2*hw,bh);c.strokeStyle='#1e3a8a';c.lineWidth=2;c.strokeRect(xm-hw,fy-bh,2*hw,bh);
+ tx(c,'m = '+S.m.toFixed(1)+' kg',xm,sy+5,'center','#fff',12);
+ ar(c,cx,xm,fy+28,BL,'x = '+f2(x)+' m');ar(c,xm,xm+v/vm*80,fy-bh-20,GR,'v = '+f2(v)+' m/s');ar(c,xm,xm+a/am*80,fy-bh-48,RD,'a = '+f2(a)+' m/s²');
+ tx(c,'t = '+f2(t)+' s',12,18,'left',TH.ink,14);
+ const fr=((t%Tp())/Tp());c.fillStyle=TH.grid;c.fillRect(12,h-16,w-24,6);c.fillStyle=OR;c.fillRect(12,h-16,(w-24)*fr,6);c.beginPath();c.arc(12+(w-24)*fr,h-13,7,0,7);c.fill();
+ tx(c,'مؤشر الزمن: '+(fr*100).toFixed(0)+'% من الدورة T',w/2,h-24,'center',TH.mut,12)}
+
+function ar2(c,x1,y1,x2,y2,col){const d=Math.hypot(x2-x1,y2-y1);c.strokeStyle=c.fillStyle=col;c.lineWidth=3;c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.beginPath();if(d>3){const u=[(x2-x1)/d,(y2-y1)/d];c.moveTo(x2,y2);c.lineTo(x2-u[0]*10-u[1]*5,y2-u[1]*10+u[0]*5);c.lineTo(x2-u[0]*10+u[1]*5,y2-u[1]*10-u[0]*5)}else c.arc(x1,y1,3,0,7);c.fill()}
+function setMode(m){S.mode=m;const p=m=='pend';$('pc').style.display=p?'':'none';reg.w.forEach(i=>i.disabled=p);$('mS').className=p?'':'p';$('mP').className=p?'p':'';$('st').textContent=p?'🧪 المحاكاة: البندول البسيط':'🧪 المحاكاة: كتلة ونابض'}
+function simP(){const[c,w,h]=fit($('sim')),cx=w/2,py=34,Lp=70+(S.L-.3)/2.7*110,t=S.t,x=F.x(t),v=F.v(t),a=F.a(t),th=x/S.L,th0=S.A/S.L,vm=S.A*S.w,am=vm*S.w,r=12+3*S.m,bx=cx+Lp*Math.sin(th),by=py+Lp*Math.cos(th),tg=[Math.cos(th),-Math.sin(th)],nr=[Math.sin(th),Math.cos(th)];
+ c.fillStyle=TH.mut;c.fillRect(cx-70,py-8,140,8);c.setLineDash([5,4]);c.lineWidth=1.2;
+ [[0,TH.mut,'θ = 0'],[th0,BL,'+θ₀'],[-th0,BL,'−θ₀']].forEach(([q,col,l])=>{const R=Lp+r+8;c.strokeStyle=col;c.beginPath();c.moveTo(cx,py);c.lineTo(cx+R*Math.sin(q),py+R*Math.cos(q));c.stroke();tx(c,l,cx+(R+14)*Math.sin(q),py+(R+14)*Math.cos(q)+4,'center',col,12)});c.setLineDash([]);
+ c.strokeStyle=BL;c.lineWidth=4;c.beginPath();c.arc(cx,py,Lp,PI/2,PI/2-th,th>0);c.stroke();
+ c.strokeStyle='#94a3b8';c.lineWidth=2.5;c.beginPath();c.moveTo(cx,py);c.lineTo(bx,by);c.stroke();
+ const g=c.createRadialGradient(bx-r/3,by-r/3,2,bx,by,r);g.addColorStop(0,'#93c5fd');g.addColorStop(1,'#1d4ed8');c.fillStyle=g;c.beginPath();c.arc(bx,by,r,0,7);c.fill();c.strokeStyle='#1e3a8a';c.lineWidth=2;c.stroke();
+ ar2(c,bx,by,bx+tg[0]*v/vm*70,by+tg[1]*v/vm*70,GR);const sx=bx-nr[0]*(r+16),sy=by-nr[1]*(r+16);ar2(c,sx,sy,sx+tg[0]*a/am*70,sy+tg[1]*a/am*70,RD);
+ [['t = '+f2(t)+' s',TH.ink],['x = s = Lθ = '+f2(x)+' m',BL],['θ = '+f2(th)+' rad ('+(th*180/PI).toFixed(1)+'°)',TH.ink],['v = '+f2(v)+' m/s',GR],['a = '+f2(a)+' m/s²',RD],['m = '+f2(S.m)+' kg ، L = '+f2(S.L)+' m',TH.mut]].forEach(([s,col],i)=>tx(c,s,12,18+i*18,'left',col,i?12:14));
+ const fr=((t%Tp())/Tp());c.fillStyle=TH.grid;c.fillRect(12,h-16,w-24,6);c.fillStyle=OR;c.fillRect(12,h-16,(w-24)*fr,6);c.beginPath();c.arc(12+(w-24)*fr,h-13,7,0,7);c.fill();tx(c,'مؤشر الزمن: '+(fr*100).toFixed(0)+'% من الدورة T',w/2,h-24,'center',TH.mut,12)}
+/* ---------- plotting ---------- */
+function plot(cv,o){const[c,w,h]=fit(cv),ml=56,mr=12,mt=12,mb=34,pw=w-ml-mr,ph=h-mt-mb,W=win(),t0=Math.floor(S.t/W+1e-9)*W,
+ X=t=>ml+(t-t0)/W*pw,Y=y=>mt+(o.y1-y)/(o.y1-o.y0)*ph;cv._g={ml,pw,W,t0};c.lineWidth=1;
+ for(let i=0;i<=4;i++){const y=o.y0+(o.y1-o.y0)*i/4;c.strokeStyle=TH.grid;c.beginPath();c.moveTo(ml,Y(y));c.lineTo(w-mr,Y(y));c.stroke();tx(c,fm(y),ml-6,Y(y)+4,'right',TH.mut,11)}
+ for(let i=0;i<=6;i++){const t=t0+W*i/6;c.strokeStyle=TH.grid;c.beginPath();c.moveTo(X(t),mt);c.lineTo(X(t),mt+ph);c.stroke();tx(c,t.toFixed(2),X(t),h-mb+14,'center',TH.mut,11)}
+ if(o.y0<0){c.strokeStyle=TH.mut;c.beginPath();c.moveTo(ml,Y(0));c.lineTo(w-mr,Y(0));c.stroke()}
+ tx(c,'الزمن t (s)',ml+pw/2,h-4,'center',TH.ink,12);c.save();c.translate(13,mt+ph/2);c.rotate(-PI/2);tx(c,o.yl,0,0,'center',TH.ink,12);c.restore();
+ c.save();c.beginPath();c.rect(ml,mt,pw,ph);c.clip();
+ (o.ref||[]).forEach(([y])=>{c.setLineDash([6,4]);c.strokeStyle=o.s[0].c;c.beginPath();c.moveTo(ml,Y(y));c.lineTo(w-mr,Y(y));c.stroke();c.setLineDash([])});
+ o.s.forEach(s=>{c.beginPath();for(let i=0;i<=300;i++){const t=t0+W*i/300;i?c.lineTo(X(t),Y(s.f(t))):c.moveTo(X(t),Y(s.f(t)))}c.strokeStyle=s.c;c.lineWidth=2.5;c.stroke();if(o.fill){c.lineTo(X(t0+W),Y(0));c.lineTo(X(t0),Y(0));c.fillStyle=s.c+'22';c.fill()}});
+ if(o.th!=null){const two=2*PI,n0=Math.floor((S.w*t0+S.p-o.th)/two)-1,pk=[];
+  for(let n=n0;n<n0+W*S.w/two+3;n++)[[0,1],[PI,-1]].forEach(([k,sg])=>{const t=(o.th+k+n*two-S.p)/S.w;if(t>=t0&&t<=t0+W){c.beginPath();c.arc(X(t),Y(sg*o.ym),4.5,0,7);c.fillStyle=TH.card;c.fill();c.strokeStyle=o.s[0].c;c.lineWidth=2;c.stroke();if(!k)pk.push(t)}});
+  if(o.per&&pk.length>1){const y=Y(o.ym*1.2),a=X(pk[0]),b=X(pk[1]);c.strokeStyle=c.fillStyle=TH.ink;c.lineWidth=1.5;c.beginPath();c.moveTo(a,y);c.lineTo(b,y);c.moveTo(a,y-5);c.lineTo(a,y+5);c.moveTo(b,y-5);c.lineTo(b,y+5);c.stroke();tx(c,'T = '+f2(Tp())+' s',(a+b)/2,y-6,'center',TH.ink,12)}}
+ c.restore();
+ (o.ref||[]).forEach(([y,l])=>tx(c,l,w-mr-4,Y(y)-4,'right',o.s[0].c,12));
+ if(S.t>=t0&&S.t<=t0+W){c.strokeStyle=TH.ink;c.lineWidth=1.5;c.beginPath();c.moveTo(X(S.t),mt);c.lineTo(X(S.t),mt+ph);c.stroke();o.s.forEach(s=>{c.beginPath();c.arc(X(S.t),Y(s.f(S.t)),6,0,7);c.fillStyle=s.c;c.fill();c.strokeStyle='#fff';c.lineWidth=2;c.stroke()})}
+ if(hov!=null&&hov>=t0&&hov<=t0+W){const xp=X(hov),s=o.tip(hov);c.setLineDash([3,3]);c.strokeStyle=TH.mut;c.lineWidth=1;c.beginPath();c.moveTo(xp,mt);c.lineTo(xp,mt+ph);c.stroke();c.setLineDash([]);
+  c.font='12px '+FN;const tw=c.measureText(s).width+12,bx=xp+8+tw<w?xp+8:xp-8-tw;c.fillStyle=TH.card;c.globalAlpha=.92;c.fillRect(bx,mt+3,tw,20);c.globalAlpha=1;c.strokeStyle=TH.grid;c.strokeRect(bx,mt+3,tw,20);tx(c,s,bx+6,mt+17,'left',TH.ink,12)}}
+['g1','g2','g3','g4'].forEach(id=>{const cv=$(id),tm=e=>{const r=cv.getBoundingClientRect(),g=cv._g;return g.t0+Math.min(1,Math.max(0,(e.clientX-r.left-g.ml)/g.pw))*g.W};
+ cv.onpointermove=e=>{hov=tm(e);if(drag)setV('t',hov)};cv.onpointerdown=e=>{drag=true;S.play=false;cv.setPointerCapture(e.pointerId);setV('t',tm(e))};
+ cv.onpointerup=cv.onpointercancel=()=>drag=false;cv.onpointerleave=()=>{if(!drag)hov=null};cv.onwheel=e=>{e.preventDefault();S.z=Math.min(10,Math.max(.25,S.z*(e.deltaY<0?1.25:.8)))}});
+
+/* ---------- results ---------- */
+const R=[['x','الإزاحة x','m',BL,()=>F.x(S.t)],['v','السرعة v','m/s',GR,()=>F.v(S.t)],['a','التسارع a','m/s²',RD,()=>F.a(S.t)],['vm','السرعة العظمى vmax','m/s',GR,()=>S.A*S.w],['am','التسارع الأعظم amax','m/s²',RD,()=>S.A*S.w**2],
+['T','الزمن الدوري T','s','',Tp],['f','التردد f','Hz','',()=>S.w/2/PI],['w','التردد الزاوي ω','rad/s','',()=>S.w],['K','الطاقة الحركية K','J',GR,()=>F.K(S.t)],['U','طاقة الوضع U','J',BL,()=>F.U(S.t)],['E','الطاقة الكلية E','J',OR,()=>F.E()]];
+$('res').innerHTML=R.map(r=>`<div class="cell"><small>${r[1]}</small><b id="R${r[0]}" style="color:${r[3]||'inherit'}"></b></div>`).join('');
+
+function panels(){const t=S.t,x=F.x(t),v=F.v(t),a=F.a(t),K=F.K(t),U=F.U(t),E=F.E(),th=`${f2(S.w)}·${f2(t)}+(${f2(S.p)})`;
+ R.forEach(r=>$('R'+r[0]).textContent=fx(r[4]())+' '+r[2]);
+ $('eq').innerHTML=`<div class="eq">x(t) = A sin(ωt+φ) = ${f2(S.A)}·sin(${th}) = <b style="color:${BL}">${fx(x)} m</b></div><div class="eq">v(t) = Aω cos(ωt+φ) = ${f2(S.A)}·${f2(S.w)}·cos(${th}) = <b style="color:${GR}">${fx(v)} m/s</b></div><div class="eq">a(t) = −Aω² sin(ωt+φ) = −${f2(S.A)}·${f2(S.w)}²·sin(${th}) = <b style="color:${RD}">${fx(a)} m/s²</b></div><div class="eq">T = 2π/ω = ${fx(Tp())} s ، f = 1/T = ${fx(S.w/2/PI)} Hz</div>${S.mode=='pend'?`<div class="eq">ω = √(g/L) = √(${f2(S.g)}/${f2(S.L)}) = ${fx(S.w)} rad/s ، T = 2π√(L/g) = ${fx(Tp())} s</div><div class="eq">θ = x/L = ${fx(x/S.L)} rad ، k = mg/L = ${f2(S.m*S.g/S.L)} N/m</div>`:''}`;
+ $('eqE').innerHTML=`<div class="eq">K = ½mv² = ½(${f2(S.m)})(${f2(v)})² = <b style="color:${GR}">${fx(K)} J</b></div><div class="eq">k = mω² = ${f2(S.m)}·${f2(S.w)}² = ${f2(S.m*S.w*S.w)} N/m</div><div class="eq">U = ½kx² = ½(${f2(S.m*S.w*S.w)})(${f2(x)})² = <b style="color:${BL}">${fx(U)} J</b></div><div class="eq">E = K + U = ${fx(K+U)} J</div><div class="eq">E = ½mω²A² = <b style="color:${OR}">${fx(E)} J</b> (ثابتة)</div>`;
+ [['K',K],['U',U]].forEach(([k,e])=>{$('b'+k).style.width=(e/E*100)+'%';$('v'+k).textContent=fx(e)+' J ('+(e/E*100).toFixed(0)+'%)'});$('vE').textContent=fx(E)+' J (100%)';
+ $('r1').innerHTML=`الزمن الدوري <bdi dir="ltr">T = 2π/ω = ${fx(Tp())} s</bdi> ، السعة <bdi dir="ltr">A = ${f2(S.A)} m</bdi> ، الإزاحة الآن <bdi dir="ltr">x = ${fx(x)} m</bdi>`;
+ $('r2').innerHTML=`<bdi dir="ltr">v = ±ω√(A²−x²) = ${fx(v)} m/s</bdi> ← السرعة أعظم عند x = 0 وتنعدم عند x = ±A (vmax = Aω)`;
+ $('r3').innerHTML=`<bdi dir="ltr">a = −ω²x = −(${f2(S.w*S.w)})(${f2(x)}) = ${fx(a)} m/s²</bdi> ← التسارع يعاكس الإزاحة دائمًا ويبلغ أقصاه عند x = ±A`;
+ $('spd').textContent='×'+SP[si];{const q=S.A/S.L;$('warn').textContent=S.mode=='pend'?'الإزاحة x = Lθ إزاحة قوسية (تقريب الزوايا الصغيرة sin θ ≈ θ).'+(q>.27?' ⚠ θ₀ = '+f2(q)+' rad أكبر من 15° تقريبًا، فالنموذج أقل دقة.':''):''}EX.forEach((e,i)=>$('o'+i).innerHTML=e.o())}
+
+/* ---------- discovery experiments ---------- */
+const tAt=(th,per)=>{const n=Math.ceil((S.p-th)/per-1e-9);return(th+n*per-S.p)/S.w};
+const B={A:1,w:2,p:0,m:1},eS=()=>`K = ${fx(F.K(S.t))} J ، U = ${fx(F.U(S.t))} J ، E = ${fx(F.E())} J`;
+const EX=[
+{q:'1) ماذا يحدث للإزاحة عند زيادة السعة؟',b:[['A = 0.5 m',{...B,A:.5},1],['A = 1.5 m',{...B,A:1.5},1]],o:()=>`x تتذبذب بين ±${f2(S.A)} m ، أي x_max = A`,n:'تزداد أقصى إزاحة بزيادة السعة دون تغيّر الزمن الدوري.'},
+{q:'2) كيف يؤثر التردد الزاوي في الزمن الدوري؟',b:[['ω = 2 rad/s',{...B,w:2},1],['ω = 4 rad/s',{...B,w:4},1]],o:()=>`ω = ${f2(S.w)} → T = 2π/ω = ${fx(Tp())} s`,n:'عند مضاعفة ω ينصف الزمن الدوري (علاقة عكسية).'},
+{q:'3) كيف تتغير السرعة العظمى عند زيادة ω؟',b:[['ω = 2',{...B,w:2},1],['ω = 6',{...B,w:6},1]],o:()=>`vmax = Aω = ${f2(S.A)}×${f2(S.w)} = ${fx(S.A*S.w)} m/s`,n:'السرعة العظمى تتناسب طرديًا مع ω عند ثبات A.'},
+{q:'4) كيف تتغير الطاقة الكلية عند مضاعفة السعة؟',b:[['A = 1 m',{...B,A:1},1],['A = 2 m',{...B,A:2},1]],o:()=>`E = ½mω²A² = ${fx(F.E())} J`,n:'E تتناسب مع مربع A: مضاعفة السعة تضاعف الطاقة أربع مرات.'},
+{q:'5) K وU عند موضع الاتزان؟',b:[['x = 0 (متجه يمينًا)',{...B,t:()=>tAt(0,2*PI)},0],['x = 0 (متجه يسارًا)',{...B,t:()=>tAt(PI,2*PI)},0]],o:()=>`x = ${fx(F.x(S.t))} m → ${eS()}`,n:'عند الاتزان U = 0 وتكون K عظمى وتساوي E.'},
+{q:'6) ماذا يحدث للطاقة عند أقصى إزاحة؟',b:[['x = +A',{...B,t:()=>tAt(PI/2,2*PI)},0],['x = −A',{...B,t:()=>tAt(3*PI/2,2*PI)},0]],o:()=>`x = ${fx(F.x(S.t))} m → ${eS()}`,n:'عند أقصى إزاحة v = 0 فتنعدم K وتصبح U عظمى وتساوي E.'},
+{q:'7) كيف يؤثر ثابت الطور φ في نقطة البداية؟',b:[['φ = 0',{...B,p:0,t:0},0],['φ = π/2',{...B,p:PI/2,t:0},0],['φ = −π/2',{...B,p:-PI/2,t:0},0]],o:()=>`φ = ${f2(S.p)} rad → x(0) = A sin φ = ${fx(F.x(0))} m ، v(0) = ${fx(F.v(0))} m/s`,n:'φ يحدد موضع الجسم واتجاه حركته عند t = 0 دون تغيير T أو A.'},
+{q:'8) البندول البسيط: كيف يؤثر طول الخيط والكتلة في الزمن الدوري؟',b:[['L = 0.5 m',{mode:'pend',A:.1,p:0,m:1,L:.5,g:9.81},1],['L = 1 m',{mode:'pend',A:.1,p:0,m:1,L:1,g:9.81},1],['L = 2 m',{mode:'pend',A:.1,p:0,m:1,L:2,g:9.81},1],['L = 1 m ، m = 3 kg',{mode:'pend',A:.1,p:0,m:3,L:1,g:9.81},1]],o:()=>S.mode=='pend'?`L = ${f2(S.L)} m ، m = ${f2(S.m)} kg → T = 2π√(L/g) = ${fx(2*PI*Math.sqrt(S.L/S.g))} s`:'اختر إحدى الحالات لتفعيل وضع البندول',n:'T تتناسب مع √L، ولا تعتمد على الكتلة ولا على السعة (للزوايا الصغيرة).'}];
+$('ex').innerHTML=EX.map((e,i)=>`<div class="card"><h3>${e.q}</h3><div class="btns" style="margin:6px 0">${e.b.map((b,j)=>`<button data-e="${i},${j}">${b[0]}</button>`).join('')}</div><div class="out" id="o${i}"></div><div class="note">${e.n}</div></div>`).join('');
+
+/* ---------- actions ---------- */
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.e){const[i,j]=b.dataset.e.split(',').map(Number),[,p,pl]=EX[i].b[j];setMode(p.mode||'spring');for(const k in p)if(k!='mode')setV(k,typeof p[k]=='function'?p[k]():p[k]);S.play=!!pl;return}
+ const A={play:()=>S.play=true,pause:()=>S.play=false,stop:()=>{S.play=false;setV('t',0)},restart:()=>{setV('t',0);S.play=true},
+ reset:()=>{setMode('spring');setV('L',1);setV('g',9.81);for(const k in D)setV(k,D[k]);S.play=false;S.z=1;si=3},slow:()=>si=Math.max(0,si-1),fast:()=>si=Math.min(SP.length-1,si+1),
+ sb:()=>{S.play=false;setV('t',clampT(S.t-.05))},sf:()=>{S.play=false;setV('t',clampT(S.t+.05))},
+ zi:()=>S.z=Math.min(10,S.z*1.5),zo:()=>S.z=Math.max(.25,S.z/1.5),zr:()=>S.z=1,top:()=>$('top').scrollIntoView({behavior:'smooth'}),mS:()=>setMode('spring'),mP:()=>setMode('pend')}[b.dataset.a];A&&A()});
+
+/* ---------- main loop ---------- */
+let last=performance.now();
+(function loop(n){const dt=Math.min(.05,(n-last)/1000);last=n;if(S.mode=='pend'){S.w=Math.sqrt(S.g/S.L);sync('w')}if(S.play){S.t+=dt*SP[si];if(S.t>60)S.t-=60;sync('t')}
+ sim();const E=F.E();
+ plot($('g1'),{s:[{f:F.x,c:BL}],yl:'x (m)',y1:S.A*1.4,y0:-S.A*1.4,ym:S.A,th:PI/2,per:1,ref:[[S.A,'+A'],[-S.A,'−A']],tip:t=>`t=${f2(t)} s | x=${fx(F.x(t))} m`});
+ const vm=S.A*S.w,am=vm*S.w;
+ plot($('g2'),{s:[{f:F.v,c:GR}],yl:'v (m/s)',y1:vm*1.35,y0:-vm*1.35,ym:vm,th:0,ref:[[vm,'+vmax'],[-vm,'−vmax']],tip:t=>`t=${f2(t)} s | v=${fx(F.v(t))} m/s | x=${fx(F.x(t))} m`});
+ plot($('g3'),{s:[{f:F.a,c:RD}],yl:'a (m/s²)',y1:am*1.35,y0:-am*1.35,ym:am,th:3*PI/2,ref:[[am,'+amax'],[-am,'−amax']],tip:t=>`t=${f2(t)} s | a=${fx(F.a(t))} m/s² | x=${fx(F.x(t))} m`});
+ plot($('g4'),{s:[{f:F.K,c:GR},{f:F.U,c:BL},{f:F.E,c:OR}],yl:'E (J)',y0:0,y1:E*1.25,fill:1,tip:t=>`K=${fx(F.K(t))} | U=${fx(F.U(t))} | E=${fx(E)} J`});
+ panels();requestAnimationFrame(loop)})(last);
+</script></body></html>
